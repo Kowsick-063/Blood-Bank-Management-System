@@ -50,7 +50,7 @@ const INITIAL_REQUESTS = [
 
 const INITIAL_USERS = [
   { id: 1, name: "Admin User",   email: "admin@bloodbee.in",   role: "admin",     phone: "+91 98765 43210", city: "Coimbatore", joined: "2024-01-10" },
-  { id: 2, name: "Dr. Ramesh",   email: "ramesh@hospital.com", role: "recipient", phone: "+91 94321 00001", city: "Chennai",    joined: "2024-03-15" },
+  { id: 2, name: "Dr. Ramesh",   email: "ramesh@hospital.com", role: "donor", phone: "+91 94321 00001", city: "Chennai",    joined: "2024-03-15", bg: "O+" },
   { id: 3, name: "Priya Devi",   email: "priya.d@email.com",   role: "donor",     phone: "+91 87654 32109", city: "Madurai",    joined: "2024-05-22", bg: "A+" },
   { id: 4, name: "Karthik Raja", email: "karthik@blood.org",   role: "admin",     phone: "+91 76543 21098", city: "Coimbatore", joined: "2024-07-01" },
 ];
@@ -163,7 +163,7 @@ const Btn = ({ children, variant = "outline", onClick, size = "md", disabled = f
   return <button onClick={onClick} disabled={disabled} style={{ ...base, ...variants[variant] }}>{children}</button>;
 };
 
-const Input = ({ label, required, type = "text", ...props }) => {
+const Input = ({ label, required, type = "text", prefix, ...props }) => {
   const [showPwd, setShowPwd] = useState(false);
   const isPwd = type === "password";
   const inputType = isPwd && showPwd ? "text" : type;
@@ -172,7 +172,8 @@ const Input = ({ label, required, type = "text", ...props }) => {
     <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
       {label && <label style={{ fontSize: 11, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.6px" }}>{label}{required && <span style={{ color: C.crimson }}> *</span>}</label>}
       <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-        <input style={{ padding: "9px 12px", paddingRight: isPwd ? 36 : 12, borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13.5, color: C.text, outline: "none", background: "#fff", fontFamily: "inherit", width: "100%", boxSizing: "border-box" }} type={inputType} {...props} />
+        {prefix && <div style={{ position: "absolute", left: 12, color: C.textMuted, fontSize: 13.5, pointerEvents: "none", fontWeight: 600 }}>{prefix}</div>}
+        <input style={{ padding: "9px 12px", paddingLeft: prefix ? 42 : 12, paddingRight: isPwd ? 36 : 12, borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13.5, color: C.text, outline: "none", background: "#fff", fontFamily: "inherit", width: "100%", boxSizing: "border-box" }} type={inputType} {...props} />
         {isPwd && (
           <button type="button" onClick={() => setShowPwd(!showPwd)} style={{ position: "absolute", right: 8, background: "transparent", border: "none", cursor: "pointer", color: C.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }}>
             {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -291,7 +292,7 @@ const ProgressBar = ({ value, max, color }) => {
 
 // LOGIN
 const LoginPage = ({ onLogin }) => {
-  const [loginMode, setLoginMode] = useState("admin"); // "admin", "donor", "recipient"
+  const [loginMode, setLoginMode] = useState("admin"); // "admin", "donor"
   const [email, setEmail] = useState("admin@bloodbee.in");
   const [pwd, setPwd] = useState("admin123");
   const [view, setView] = useState("login"); // "login", "register", "forgot"
@@ -307,7 +308,6 @@ const LoginPage = ({ onLogin }) => {
   const switchLoginMode = (mode) => {
     setLoginMode(mode);
     if (mode === "admin") { setEmail("admin@bloodbee.in"); }
-    else if (mode === "recipient") { setEmail("ramesh@hospital.com"); }
     else { setEmail("priya.d@email.com"); }
   };
 
@@ -326,8 +326,7 @@ const LoginPage = ({ onLogin }) => {
             <div style={{ display: "flex", background: C.surface2, borderRadius: 10, padding: 4, gap: 4, marginBottom: 22 }}>
               {[
                 { id: "admin", label: "🛡️ Admin", desc: "Manage Bank" },
-                { id: "recipient", label: "🏥 Recipient", desc: "Request Blood" },
-                { id: "donor", label: "🩸 Donor", desc: "Donate Blood" }
+                { id: "donor", label: "🩸 User", desc: "Donate & Request" }
               ].map(mode => (
                 <button key={mode.id} onClick={() => switchLoginMode(mode.id)} style={{ flex: 1, padding: "10px 4px", borderRadius: 8, border: "none", background: loginMode === mode.id ? "#fff" : "transparent", boxShadow: loginMode === mode.id ? "0 2px 8px rgba(0,0,0,0.1)" : "none", cursor: "pointer", textAlign: "center", transition: "all 0.2s" }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: loginMode === mode.id ? C.crimson : C.textMuted }}>{mode.label}</div>
@@ -336,12 +335,12 @@ const LoginPage = ({ onLogin }) => {
               ))}
             </div>
 
-            <div style={{ fontWeight: 700, fontSize: 18, color: C.text, marginBottom: 20 }}>Sign In as {loginMode === "admin" ? "Admin" : loginMode === "recipient" ? "Recipient" : "Donor"}</div>
+            <div style={{ fontWeight: 700, fontSize: 18, color: C.text, marginBottom: 20 }}>Sign In as {loginMode === "admin" ? "Admin" : "User"}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <Input label="Email Address" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@email.com" />
+              <Input label="Email Address" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Ex: you@email.com" />
               <Input label="Password" type="password" value={pwd} onChange={e => setPwd(e.target.value)} placeholder="••••••••" />
             </div>
-            <Btn variant="primary" onClick={() => onLogin({ id: loginMode === "admin" ? 1 : loginMode === "recipient" ? 2 : 3, name: loginMode === "admin" ? "Admin User" : loginMode === "recipient" ? "Dr. Ramesh" : "Priya Devi", email, role: loginMode, bg: loginMode === "donor" ? "A+" : undefined })} style={{ width: "100%", marginTop: 20, padding: "12px", fontSize: 14 }}>
+            <Btn variant="primary" onClick={() => onLogin({ id: loginMode === "admin" ? 1 : 3, name: loginMode === "admin" ? "Admin User" : "Priya Devi", email, role: loginMode, bg: loginMode === "donor" ? "A+" : undefined })} style={{ width: "100%", marginTop: 20, padding: "12px", fontSize: 14 }}>
               Sign In →
             </Btn>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
@@ -357,14 +356,14 @@ const LoginPage = ({ onLogin }) => {
 
         {view === "register" && (
           <>
-            <div style={{ fontWeight: 700, fontSize: 20, color: C.text, marginBottom: 20 }}>Create {loginMode === "admin" ? "Admin" : loginMode === "donor" ? "Donor" : "Recipient"} Account</div>
+            <div style={{ fontWeight: 700, fontSize: 20, color: C.text, marginBottom: 20 }}>Create {loginMode === "admin" ? "Admin" : "User"} Account</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              <Input label="Full Name" required placeholder="Dr. Ramesh Kumar" onChange={e => setForm({...form, name: e.target.value})} />
-              <Input label="Email" required type="email" placeholder="you@example.com" onChange={e => setForm({...form, email: e.target.value})} />
+              <Input label="Full Name" required placeholder="Ex: Dr. Ramesh Kumar" onChange={e => setForm({...form, name: e.target.value})} />
+              <Input label="Email" required type="email" placeholder="Ex: you@example.com" onChange={e => setForm({...form, email: e.target.value})} />
               <Input label="Password" required type="password" placeholder="Min 8 characters" onChange={e => setForm({...form, password: e.target.value})} />
               <Input label="Confirm Password" required type="password" placeholder="Re-enter password" onChange={e => setForm({...form, confirmPassword: e.target.value})} />
-              <Input label="Mobile Num" type="tel" placeholder="+91 98765 43210" onChange={e => setForm({...form, phone: e.target.value})} />
-              <Input label="Location (City)" required placeholder="Coimbatore" onChange={e => setForm({...form, city: e.target.value})} />
+              <Input label="Mobile Num" type="tel" prefix="+91" placeholder="98765 43210" value={form.phone || ""} onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} />
+              <Input label="Location (City)" required placeholder="Ex: Coimbatore" onChange={e => setForm({...form, city: e.target.value})} />
               {loginMode === "donor" && (
                 <Select label="Blood Group" required value={form.bg} onChange={e => setForm({...form, bg: e.target.value})}>
                   <option value="">Select</option>
@@ -593,8 +592,8 @@ const InventoryPage = ({ inventory, setInventory }) => {
             <option value="">Select group</option>
             {["A+","A-","B+","B-","O+","O-","AB+","AB-"].map(g => <option key={g} value={g}>{g}</option>)}
           </Select>
-          <Input label="Units (+ to add, - to deduct)" required type="number" value={form.units} onChange={e => setForm({...form, units: e.target.value})} placeholder="e.g. 10 or -5" />
-          <Input label="Reason" value={form.reason} onChange={e => setForm({...form, reason: e.target.value})} placeholder="Donation drive, emergency..." />
+          <Input label="Units (+ to add, - to deduct)" required type="number" value={form.units} onChange={e => setForm({...form, units: e.target.value})} placeholder="Ex: 10 or -5" />
+          <Input label="Reason" value={form.reason} onChange={e => setForm({...form, reason: e.target.value})} placeholder="Ex: Donation drive, emergency..." />
         </div>
         <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 14 }}>
           <Btn variant="outline" onClick={() => setForm({ group: "", units: "", reason: "" })}>Clear</Btn>
@@ -782,8 +781,8 @@ const RegisterDonorPage = ({ onRegister }) => {
 
         {tab === 0 && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            <Input label="Full Name" required value={form.name} onChange={f("name")} placeholder="Ramesh Kumar" />
-            <Input label="Age" required type="number" value={form.age} onChange={f("age")} placeholder="25" min="18" max="65" />
+            <Input label="Full Name" required value={form.name} onChange={f("name")} placeholder="Ex: Ramesh Kumar" />
+            <Input label="Age" required type="number" value={form.age} onChange={f("age")} placeholder="Ex: 25" min="18" max="65" />
             <Select label="Gender" required value={form.gender} onChange={f("gender")}>
               <option>Male</option><option>Female</option><option>Other</option>
             </Select>
@@ -813,10 +812,10 @@ const RegisterDonorPage = ({ onRegister }) => {
 
         {tab === 2 && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            <Input label="Phone" required value={form.phone} onChange={f("phone")} placeholder="+91 98765 43210" />
-            <Input label="Email" type="email" value={form.email} onChange={f("email")} placeholder="donor@email.com" />
-            <Input label="City" required value={form.city} onChange={f("city")} placeholder="Coimbatore" />
-            <Input label="State" placeholder="Tamil Nadu" />
+            <Input label="Phone" required prefix="+91" placeholder="98765 43210" value={form.phone} onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} />
+            <Input label="Email" type="email" value={form.email} onChange={f("email")} placeholder="Ex: donor@email.com" />
+            <Input label="City" required value={form.city} onChange={f("city")} placeholder="Ex: Coimbatore" />
+            <Input label="State" placeholder="Ex: Tamil Nadu" />
           </div>
         )}
 
@@ -1101,24 +1100,24 @@ const NewRequestPage = ({ inventory, addRequest, donors, addNotification }) => {
           <Card>
             <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 16 }}>Patient Information</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              <Input label="Patient Name" required value={form.patient} onChange={f("patient")} placeholder="Kavya Priya" />
-              <Input label="Patient Age" type="number" value={form.age} onChange={f("age")} placeholder="35" />
+              <Input label="Patient Name" required value={form.patient} onChange={f("patient")} placeholder="Ex: Kavya Priya" />
+              <Input label="Patient Age" type="number" value={form.age} onChange={f("age")} placeholder="Ex: 35" />
               <Select label="Blood Group Required" required value={form.bg} onChange={f("bg")}>
                 <option value="">Select</option>
                 {["A+","A-","B+","B-","O+","O-","AB+","AB-"].map(g => <option key={g}>{g}</option>)}
               </Select>
-              <Input label="Units Required" required type="number" value={form.units} onChange={f("units")} placeholder="2" min="1" />
+              <Input label="Units Required" required type="number" value={form.units} onChange={f("units")} placeholder="Ex: 2" min="1" />
               <Select label="Urgency Level" required value={form.urgency} onChange={f("urgency")}>
                 <option>Normal</option><option>Urgent</option><option>Critical</option>
               </Select>
-              <Input label="Contact Number" required value={form.contact} onChange={f("contact")} placeholder="+91 98765 43210" />
+              <Input label="Contact Number" required prefix="+91" placeholder="98765 43210" value={form.contact} onChange={e => setForm({...form, contact: e.target.value.replace(/\D/g, '').slice(0, 10)})} />
               <Select label="City / Location" required value={form.city} onChange={f("city")}>
                 <option value="">Select City</option>
                 {cities.map(c => <option key={c} value={c}>{c}</option>)}
               </Select>
               <div />
               <div style={{ gridColumn: "1 / -1" }}>
-                <Textarea label="Reason for Request" value={form.reason} onChange={f("reason")} placeholder="Describe the medical condition..." />
+                <Textarea label="Reason for Request" value={form.reason} onChange={f("reason")} placeholder="Ex: Describe the medical condition..." />
               </div>
             </div>
           </Card>
@@ -1126,8 +1125,8 @@ const NewRequestPage = ({ inventory, addRequest, donors, addNotification }) => {
           <Card>
             <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 16 }}>Hospital Details</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              <Input label="Hospital Name" required value={form.hospital} onChange={f("hospital")} placeholder="PSG Hospitals, Coimbatore" />
-              <Input label="Doctor / Consultant" value={form.doctor} onChange={f("doctor")} placeholder="Dr. Meena Kumari" />
+              <Input label="Hospital Name" required value={form.hospital} onChange={f("hospital")} placeholder="Ex: PSG Hospitals, Coimbatore" />
+              <Input label="Doctor / Consultant" value={form.doctor} onChange={f("doctor")} placeholder="Ex: Dr. Meena Kumari" />
             </div>
           </Card>
 
@@ -1557,7 +1556,7 @@ const ReportsPage = () => {
 
 // PROFILE PAGE
 const ProfilePage = ({ currentUser }) => {
-  const [form, setForm] = useState({ name: currentUser.name, phone: "+91 98765 43210", city: "Coimbatore" });
+  const [form, setForm] = useState({ name: currentUser.name, phone: "9876543210", city: "Coimbatore" });
   const [saved, setSaved] = useState(false);
   const f = k => e => setForm({...form, [k]: e.target.value});
 
@@ -1590,7 +1589,7 @@ const ProfilePage = ({ currentUser }) => {
             <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 16 }}>Update Profile</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               <Input label="Full Name" value={form.name} onChange={f("name")} />
-              <Input label="Phone" type="tel" value={form.phone} onChange={f("phone")} />
+              <Input label="Phone" type="tel" prefix="+91" value={form.phone} onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} />
               <div style={{ gridColumn: "1 / -1" }}><Input label="City" value={form.city} onChange={f("city")} /></div>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14 }}>
@@ -1675,47 +1674,43 @@ const ADMIN_NAV = [
   ]},
 ];
 
-const RECIPIENT_NAV = [
-  { section: "Overview", items: [{ id: "recipient-home", label: "Home", Icon: LayoutDashboard }] },
-  { section: "Blood Requests", items: [
-    { id: "new-request",     label: "New Request",     Icon: FilePlus },
-    { id: "my-requests",     label: "My Requests",     Icon: FolderOpen },
-  ]},
-  { section: "Account", items: [
-    { id: "profile",         label: "My Profile",      Icon: User },
-  ]},
-];
-
 const DONOR_NAV = [
   { section: "Overview", items: [{ id: "donor-home", label: "Dashboard", Icon: LayoutDashboard }] },
   { section: "Blood Requests", items: [
-    { id: "incoming-requests", label: "Recipient Requests", Icon: ClipboardList },
+    { id: "new-request",       label: "Request Blood",     Icon: FilePlus },
+    { id: "my-requests",       label: "My Requests",       Icon: FolderOpen },
+    { id: "incoming-requests", label: "Urgent Alerts",     Icon: ClipboardList },
   ]},
   { section: "Account", items: [
     { id: "profile",         label: "My Profile",      Icon: User },
   ]},
 ];
 
-// ─── RECIPIENT HOME PAGE ────────────────────────────────────────────────────────
 
-const RecipientHomePage = ({ requests, inventory, onNavigate }) => {
-  const myReqs = requests.filter(r => r.userId <= 2);
-  const pending = myReqs.filter(r => r.status === "Pending");
-  const approved = myReqs.filter(r => r.status === "Approved");
-  const rejected = myReqs.filter(r => r.status === "Rejected");
+
+const DonorIncomingPage = ({ requests, currentUser, onNavigate }) => {
+  // Only show requests matching donor's city and blood group
+  const incomingReqs = requests.filter(r => r.status !== "Approved" && r.city === currentUser.city && r.bg === currentUser.bg);
+  const myReqs = requests.filter(r => r.userId === currentUser.id);
 
   return (
     <div>
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ fontWeight: 800, fontSize: 22, color: C.text, margin: 0 }}>Welcome Back! 🐝</h2>
-        <p style={{ color: C.textMuted, fontSize: 13.5, marginTop: 4 }}>Your blood request dashboard</p>
+        <p style={{ color: C.textMuted, fontSize: 13.5, marginTop: 4 }}>Donate and Request Blood</p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 24 }}>
-        <StatCard label="My Requests" value={myReqs.length} note="total submitted" accent={C.blue} icon={ClipboardList} />
-        <StatCard label="Pending" value={pending.length} note="awaiting review" accent={C.gold} icon={Clock} />
-        <StatCard label="Approved" value={approved.length} note="requests fulfilled" accent={C.green} icon={CheckCircle} />
-        <StatCard label="Rejected" value={rejected.length} note="not fulfilled" accent={C.crimson} icon={XCircle} />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
+        <Card style={{ background: C.crimsonLight, borderColor: C.crimson }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.crimsonDark }}>Patients Needing Help</div>
+          <div style={{ fontSize: 32, fontWeight: 800, color: C.crimson, marginTop: 10 }}>{incomingReqs.length}</div>
+          <div style={{ fontSize: 12, color: C.crimsonDark, opacity: 0.8 }}>Local matches for {currentUser.bg}</div>
+        </Card>
+        <Card style={{ background: C.blueLight, borderColor: C.blue }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "#1e3a8a" }}>My Requests</div>
+          <div style={{ fontSize: 32, fontWeight: 800, color: C.blue, marginTop: 10 }}>{myReqs.length}</div>
+          <div style={{ fontSize: 12, color: "#1e3a8a", opacity: 0.8 }}>View your requests</div>
+        </Card>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
@@ -1741,131 +1736,46 @@ const RecipientHomePage = ({ requests, inventory, onNavigate }) => {
               <div><div style={{ fontWeight: 600, fontSize: 14, color: C.text }}>Track Requests</div><div style={{ fontSize: 11, color: C.textMuted }}>View status of your requests</div></div>
               <ChevronRight size={16} color={C.textLight} style={{ marginLeft: "auto" }} />
             </button>
-            <button onClick={() => onNavigate("profile")} style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 16px", borderRadius: 10, border: `1px solid ${C.border}`, background: "#fff", cursor: "pointer", textAlign: "left", transition: "all 0.15s" }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.greenLight; e.currentTarget.style.borderColor = C.green; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = C.border; }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: C.greenLight, display: "flex", alignItems: "center", justifyContent: "center" }}><User size={18} color={C.green} /></div>
-              <div><div style={{ fontWeight: 600, fontSize: 14, color: C.text }}>My Profile</div><div style={{ fontSize: 11, color: C.textMuted }}>Update your information</div></div>
-              <ChevronRight size={16} color={C.textLight} style={{ marginLeft: "auto" }} />
-            </button>
           </div>
         </Card>
 
         <Card>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 14, color: C.text }}>Recent Requests</div>
-              <div style={{ fontSize: 12, color: C.textMuted }}>Your latest blood requests</div>
-            </div>
-            <Btn variant="outline" size="sm" onClick={() => onNavigate("my-requests")}>View all →</Btn>
+            <div style={{ fontWeight: 700, fontSize: 16, color: C.text }}>Local Urgent Alerts ({currentUser.bg})</div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {myReqs.slice(0, 4).map(r => {
-              const dot = r.status === "Approved" ? "#16a34a" : r.status === "Rejected" ? "#b91c1c" : "#d97706";
-              return (
-                <div key={r.id} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: `${dot}18`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {r.status === "Approved" ? <Check size={12} color={dot} /> : r.status === "Rejected" ? <X size={12} color={dot} /> : <Clock size={12} color={dot} />}
+          {incomingReqs.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "20px 0" }}>
+              <div style={{ fontSize: 32, marginBottom: 10 }}>🎉</div>
+              <div style={{ fontSize: 13, color: C.textMuted }}>No active requests require your blood type right now.</div>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {incomingReqs.map(r => (
+                <div key={r.id} style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.crimsonLight, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Droplets size={16} color={C.crimson} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600 }}>{r.patient} — {r.bg} ({r.units}u)</div>
-                    <div style={{ fontSize: 11, color: C.textMuted }}>{r.hospital} · {r.date}</div>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <div style={{ fontWeight: 700, fontSize: 13, color: C.text }}>{r.hospital}</div>
+                      <Badge status={r.urgency}>{r.urgency}</Badge>
+                    </div>
+                    <div style={{ fontSize: 11, color: C.textMuted }}>
+                      Patient: <strong>{r.patient}</strong> · Units: {r.units}u
+                    </div>
                   </div>
-                  <Badge status={r.status}>{r.status}</Badge>
                 </div>
-              );
-            })}
-            {myReqs.length === 0 && (
-              <div style={{ textAlign: "center", padding: "20px 0", color: C.textMuted, fontSize: 13 }}>No requests yet. Submit your first request!</div>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </Card>
       </div>
-
-      {/* Blood availability overview for donors */}
-      <Card>
-        <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 4 }}>Blood Availability Overview</div>
-        <div style={{ fontSize: 12, color: C.textMuted, marginBottom: 14 }}>Current stock levels across all blood groups</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: 10 }}>
-          {inventory.map(inv => {
-            const st = getStockStatus(inv.units);
-            return (
-              <div key={inv.group} style={{ textAlign: "center", padding: "12px 8px", borderRadius: 10, background: C.surface2, border: `1px solid ${C.border}` }}>
-                <BloodGroupPill group={inv.group} />
-                <div style={{ fontSize: 16, fontWeight: 800, color: C.text, marginTop: 6 }}>{inv.units}</div>
-                <div style={{ fontSize: 10, color: C.textMuted }}>units</div>
-                <Badge status={st.label === "OK" ? "success" : st.label === "Low" ? "warning" : "danger"}>{st.label}</Badge>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-// ─── DONOR DASHBOARD (INCOMING REQUESTS) ──────────────────────────────────
-const DonorIncomingPage = ({ requests, currentUser, onNavigate }) => {
-  // Only show requests matching donor's city and blood group
-  const incomingReqs = requests.filter(r => r.status !== "Approved" && r.city === currentUser.city && r.bg === currentUser.bg);
-  const acceptedReqs = requests.filter(r => r.status === "Approved" && r.city === currentUser.city && r.bg === currentUser.bg);
-
-  return (
-    <div>
-      <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontWeight: 800, fontSize: 22, color: C.text, margin: 0 }}>Incoming Urgent Requests</h2>
-        <p style={{ color: C.textMuted, fontSize: 13.5, marginTop: 4 }}>Showing recipients in {currentUser.city} needing {currentUser.bg} blood.</p>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
-        <Card style={{ background: C.crimsonLight, borderColor: C.crimson }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.crimsonDark }}>Patients Needing Help</div>
-          <div style={{ fontSize: 32, fontWeight: 800, color: C.crimson, marginTop: 10 }}>{incomingReqs.length}</div>
-          <div style={{ fontSize: 12, color: C.crimsonDark, opacity: 0.8 }}>Local matches for {currentUser.bg}</div>
-        </Card>
-      </div>
-
-      <Card>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <div style={{ fontWeight: 700, fontSize: 16, color: C.text }}>Recipient Requests (Nearby)</div>
-        </div>
-        
-        {incomingReqs.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <div style={{ fontSize: 40, marginBottom: 10 }}>🎉</div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: C.text }}>You're all caught up!</div>
-            <div style={{ fontSize: 13, color: C.textMuted }}>No active requests require your blood type right now.</div>
-          </div>
-        ) : (
-          <div style={{ display: "grid", gap: 14 }}>
-            {incomingReqs.map(r => (
-              <div key={r.id} style={{ display: "flex", gap: 14, padding: "16px", borderRadius: 12, border: `1px solid ${C.border}`, background: "#fff", alignItems: "center" }}>
-                <div style={{ width: 48, height: 48, borderRadius: "50%", background: C.crimsonLight, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Droplets size={24} color={C.crimson} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <div style={{ fontWeight: 700, fontSize: 15, color: C.text }}>{r.hospital}</div>
-                    <Badge status={r.urgency}>{r.urgency}</Badge>
-                  </div>
-                  <div style={{ fontSize: 12, color: C.textMuted }}>
-                    Patient: <strong>{r.patient}</strong> · Units Required: <strong>{r.units}u</strong>
-                  </div>
-                  <div style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>
-                    Contact: {r.contact} · {r.date}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </Card>
     </div>
   );
 };
 
 const Sidebar = ({ currentPage, onNavigate, user, onLogout }) => {
-  const nav = user.role === "admin" ? ADMIN_NAV : user.role === "donor" ? DONOR_NAV : RECIPIENT_NAV;
+  const nav = user.role === "admin" ? ADMIN_NAV : DONOR_NAV;
   return (
     <aside style={{ width: 240, background: "#7f1d1d", color: "#fff", display: "flex", flexDirection: "column", height: "100vh", position: "fixed", top: 0, left: 0, zIndex: 100 }}>
       <div style={{ padding: "18px 20px 14px", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
@@ -1873,7 +1783,7 @@ const Sidebar = ({ currentPage, onNavigate, user, onLogout }) => {
           <span style={{ fontSize: 20 }}>🐝</span>
           <div style={{ fontWeight: 800, fontSize: 19, fontFamily: "system-ui", letterSpacing: -0.5 }}>BLOOD BEE</div>
         </div>
-        <div style={{ fontSize: 11, opacity: 0.5, marginTop: 2 }}>{user.role === "admin" ? "Admin Portal" : user.role === "recipient" ? "Recipient Portal" : "Donor Portal"}</div>
+        <div style={{ fontSize: 11, opacity: 0.5, marginTop: 2 }}>{user.role === "admin" ? "Admin Portal" : "User Portal"}</div>
       </div>
       <nav style={{ flex: 1, padding: "12px 0", overflowY: "auto" }}>
         {nav.map(({ section, items }) => (
@@ -1896,7 +1806,7 @@ const Sidebar = ({ currentPage, onNavigate, user, onLogout }) => {
           <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#f59e0b", color: "#7f1d1d", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 13, flexShrink: 0 }}>{initials(user.name)}</div>
           <div style={{ flex: 1, overflow: "hidden" }}>
             <div style={{ fontSize: 13, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.name}</div>
-            <div style={{ fontSize: 11, opacity: 0.5 }}>{user.role === "admin" ? "Administrator" : user.role === "donor" ? "Donor" : "Recipient"}</div>
+            <div style={{ fontSize: 11, opacity: 0.5 }}>{user.role === "admin" ? "Administrator" : "User"}</div>
           </div>
           <button onClick={onLogout} title="Logout" style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", padding: 4 }}><LogOut size={15} /></button>
         </div>
@@ -1919,7 +1829,7 @@ const Topbar = ({ page, unread, onNotifClick, userRole }) => (
   <div style={{ height: 64, background: "#fff", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", padding: "0 28px", gap: 16, position: "sticky", top: 0, zIndex: 50 }}>
     <div style={{ flex: 1, fontWeight: 800, fontSize: 17, color: C.text, fontFamily: "system-ui" }}>{PAGE_TITLES[page] || "Page"}</div>
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <Badge status={userRole === "admin" ? "danger" : userRole === "recipient" ? "warning" : "info"}>{userRole === "admin" ? "🛡️ Admin" : userRole === "recipient" ? "🏥 Recipient" : "🩸 Donor"}</Badge>
+      <Badge status={userRole === "admin" ? "danger" : "info"}>{userRole === "admin" ? "🛡️ Admin" : "🩸 User"}</Badge>
       <button onClick={onNotifClick} style={{ position: "relative", width: 36, height: 36, borderRadius: 8, border: `1px solid ${C.border}`, background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Bell size={16} color={C.textMuted} />
         {unread > 0 && <span style={{ position: "absolute", top: -4, right: -4, background: C.crimson, color: "#fff", borderRadius: 10, fontSize: 10, fontWeight: 700, minWidth: 16, height: 16, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 3px" }}>{unread}</span>}
@@ -1963,7 +1873,7 @@ export default function App() {
       setDonors(prev => [newDonor, ...prev]);
       addNotification({ msg: `New donor ${donorId} (${u.name}, ${u.bg}) registered from portal.`, type: "info" });
     }
-    setPage(u.role === "admin" ? "dashboard" : u.role === "recipient" ? "recipient-home" : "donor-home");
+    setPage(u.role === "admin" ? "dashboard" : "donor-home");
   };
   const handleLogout = () => { setUser(null); setPage("dashboard"); };
 
@@ -1971,7 +1881,7 @@ export default function App() {
     // Prevent non-admin users from accessing admin-only pages
     const adminOnlyPages = ["dashboard", "inventory", "donors", "register-donor", "requests", "admin-users", "admin-reports"];
     if (user.role !== "admin" && adminOnlyPages.includes(targetPage)) {
-      setPage(user.role === "recipient" ? "recipient-home" : "donor-home");
+      setPage("donor-home");
       return;
     }
     setPage(targetPage);
@@ -1998,16 +1908,14 @@ export default function App() {
       case "requests":        return isAdmin ? <RequestsPage requests={requests} inventory={inventory} setRequests={setRequests} setInventory={setInventory} addNotification={addNotification} /> : null;
       case "admin-users":     return isAdmin ? <AdminUsersPage users={users} setUsers={setUsers} /> : null;
       case "admin-reports":   return isAdmin ? <ReportsPage /> : null;
-      // ── Recipient pages ──
-      case "recipient-home":  return <RecipientHomePage requests={requests} inventory={inventory} onNavigate={handleNavigate} />;
+      // ── User pages ──
+      case "donor-home":      return <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} />;
+      case "incoming-requests": return <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} />;
       case "new-request":     return <NewRequestPage inventory={inventory} addRequest={addRequest} donors={donors} addNotification={addNotification} currentUser={user} />;
       case "my-requests":     return <MyRequestsPage requests={requests} />;
-      // ── Donor pages ──
-      case "donor-home":
-      case "incoming-requests": return <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} />;
       // ── Shared pages ──
       case "profile":         return <ProfilePage currentUser={user} />;
-      default:                return isAdmin ? <Dashboard inventory={inventory} donors={donors} requests={requests} onNavigate={handleNavigate} /> : isDonor ? <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} /> : <RecipientHomePage requests={requests} inventory={inventory} onNavigate={handleNavigate} />;
+      default:                return isAdmin ? <Dashboard inventory={inventory} donors={donors} requests={requests} onNavigate={handleNavigate} /> : <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} />;
     }
   };
 

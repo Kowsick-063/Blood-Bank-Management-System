@@ -14,61 +14,25 @@ import {
 // ─── MOCK DATA ──────────────────────────────────────────────────────────────
 
 const INITIAL_INVENTORY = [
-  { group: "A+",  units: 80,  max: 120 },
-  { group: "A-",  units: 3,   max: 40  },
-  { group: "B+",  units: 72,  max: 120 },
-  { group: "B-",  units: 2,   max: 20  },
-  { group: "O+",  units: 110, max: 150 },
-  { group: "O-",  units: 1,   max: 30  },
-  { group: "AB+", units: 40,  max: 60  },
-  { group: "AB-", units: 4,   max: 15  },
+  { group: "A+",  units: 0,  max: 100 },
+  { group: "A-",  units: 0,  max: 100 },
+  { group: "B+",  units: 0,  max: 100 },
+  { group: "B-",  units: 0,  max: 100 },
+  { group: "O+",  units: 0,  max: 100 },
+  { group: "O-",  units: 0,  max: 100 },
+  { group: "AB+", units: 0,  max: 100 },
+  { group: "AB-", units: 0,  max: 100 },
 ];
 
-const INITIAL_DONORS = [
-  { id: "DN001423", name: "Ramesh Kumar",  bg: "O+",  age: 34, gender: "Male",   city: "Coimbatore", phone: "****5621", email: "ramesh.k@email.com",   lastDonation: "2024-11-01", available: true  },
-  { id: "DN002104", name: "Priya Devi",    bg: "A+",  age: 28, gender: "Female", city: "Chennai",    phone: "****8832", email: "priya.d@email.com",    lastDonation: "2024-10-12", available: true  },
-  { id: "DN003892", name: "Arjun Nair",    bg: "B+",  age: 42, gender: "Male",   city: "Madurai",    phone: "****2244", email: "arjun.n@email.com",    lastDonation: "2024-09-05", available: false },
-  { id: "DN004211", name: "Lakshmi Rao",   bg: "AB+", age: 31, gender: "Female", city: "Coimbatore", phone: "****7711", email: "lakshmi.r@email.com",  lastDonation: "2024-12-20", available: true  },
-  { id: "DN005037", name: "Vijay Anand",   bg: "O-",  age: 25, gender: "Male",   city: "Salem",      phone: "****9900", email: "vijay.a@email.com",    lastDonation: "2024-08-14", available: true  },
-  { id: "DN006654", name: "Meena Kumari",  bg: "B-",  age: 37, gender: "Female", city: "Trichy",     phone: "****4433", email: "meena.k@email.com",    lastDonation: "2024-11-30", available: false },
-  { id: "DN007112", name: "Karthik Raja",  bg: "A-",  age: 29, gender: "Male",   city: "Coimbatore", phone: "****6610", email: "karthik.r@email.com",  lastDonation: "2025-01-02", available: true  },
-  { id: "DN008345", name: "Sunita Sharma", bg: "O+",  age: 33, gender: "Female", city: "Chennai",    phone: "****3392", email: "sunita.s@email.com",   lastDonation: "2024-12-05", available: true  },
-  { id: "DN009100", name: "Deepak Raj",    bg: "O+",  age: 30, gender: "Male",   city: "Coimbatore", phone: "****1234", email: "deepak.r@email.com",   lastDonation: "2024-12-15", available: true  },
-  { id: "DN009201", name: "Anitha Balan",  bg: "A+",  age: 27, gender: "Female", city: "Coimbatore", phone: "****5678", email: "anitha.b@email.com",   lastDonation: "2025-01-05", available: true  },
-  { id: "DN009302", name: "Suresh Menon",  bg: "B+",  age: 35, gender: "Male",   city: "Chennai",    phone: "****9876", email: "suresh.m@email.com",   lastDonation: "2024-11-20", available: true  },
-  { id: "DN009403", name: "Kavitha Iyer",  bg: "O-",  age: 26, gender: "Female", city: "Coimbatore", phone: "****4321", email: "kavitha.i@email.com",  lastDonation: "2024-10-30", available: true  },
-];
+const INITIAL_DONORS = [];
 
-const INITIAL_REQUESTS = [
-  { id: "REQ-001842", patient: "Kavya Priya",   bg: "O-",  units: 2, hospital: "PSG Hospitals",    doctor: "Dr. Meena", contact: "9876543210", urgency: "Critical", reason: "Emergency surgery",       status: "Pending",  adminNote: "", date: "2025-01-15", userId: 2, city: "Coimbatore", notifiedDonors: [] },
-  { id: "REQ-001839", patient: "Suresh Babu",   bg: "AB+", units: 1, hospital: "KG Hospital",       doctor: "Dr. Raj",   contact: "9876543211", urgency: "Urgent",   reason: "Post-op transfusion",     status: "Pending",  adminNote: "", date: "2025-01-15", userId: 3, city: "Coimbatore", notifiedDonors: [] },
-  { id: "REQ-001831", patient: "Divya R",        bg: "A+",  units: 3, hospital: "KMCH",              doctor: "Dr. Priya", contact: "9876543212", urgency: "Normal",   reason: "Scheduled surgery",       status: "Approved", adminNote: "Collect from ward 4", date: "2025-01-14", userId: 2, city: "Chennai", notifiedDonors: [{ id: "DN002104", name: "Priya Devi", bg: "A+" }] },
-  { id: "REQ-001820", patient: "Murugan T",      bg: "B+",  units: 2, hospital: "Apollo Hospitals",  doctor: "Dr. Kumar", contact: "9876543213", urgency: "Urgent",   reason: "Trauma",                  status: "Approved", adminNote: "Urgent priority", date: "2025-01-14", userId: 3, city: "Chennai", notifiedDonors: [{ id: "DN009302", name: "Suresh Menon", bg: "B+" }] },
-  { id: "REQ-001811", patient: "Rekha Devi",     bg: "O+",  units: 4, hospital: "SIMS Hospital",     doctor: "Dr. Anand", contact: "9876543214", urgency: "Critical", reason: "Internal bleeding",       status: "Rejected", adminNote: "Insufficient O+ stock", date: "2025-01-13", userId: 2, city: "Coimbatore", notifiedDonors: [{ id: "DN001423", name: "Ramesh Kumar", bg: "O+" }, { id: "DN009100", name: "Deepak Raj", bg: "O+" }] },
-  { id: "REQ-001800", patient: "Anand Kumar",    bg: "A-",  units: 1, hospital: "Ganga Hospital",    doctor: "Dr. Nair",  contact: "9876543215", urgency: "Normal",   reason: "Anemia treatment",        status: "Approved", adminNote: "", date: "2025-01-13", userId: 3, city: "Coimbatore", notifiedDonors: [{ id: "DN007112", name: "Karthik Raja", bg: "A-" }] },
-];
+const INITIAL_REQUESTS = [];
 
-const INITIAL_USERS = [
-  { id: 1, name: "Admin User",   email: "admin@bloodbee.in",   role: "admin",     phone: "+91 98765 43210", city: "Coimbatore", joined: "2024-01-10" },
-  { id: 2, name: "Dr. Ramesh",   email: "ramesh@hospital.com", role: "donor", phone: "+91 94321 00001", city: "Chennai",    joined: "2024-03-15", bg: "O+" },
-  { id: 3, name: "Priya Devi",   email: "priya.d@email.com",   role: "donor",     phone: "+91 87654 32109", city: "Madurai",    joined: "2024-05-22", bg: "A+" },
-  { id: 4, name: "Karthik Raja", email: "karthik@blood.org",   role: "admin",     phone: "+91 76543 21098", city: "Coimbatore", joined: "2024-07-01" },
-];
+const INITIAL_USERS = [];
 
-const INITIAL_NOTIFICATIONS = [
-  { id: 1, msg: "Your blood request REQ-001831 has been approved. Collect 3 units of A+ from ward 4.", type: "success", time: "2 hours ago",  read: false },
-  { id: 2, msg: "ALERT: O- stock critically low — only 1 unit remaining.", type: "danger",  time: "5 hours ago", read: false },
-  { id: 3, msg: "New donor DN007112 (Karthik Raja, A-) registered in Coimbatore.", type: "info",    time: "1 day ago",   read: false },
-  { id: 4, msg: "Your request REQ-001811 was rejected. Reason: Insufficient O+ stock.", type: "danger", time: "2 days ago",  read: true  },
-  { id: 5, msg: "📧 Donor alert: 2 donors notified for REQ-001811 (O+ in Coimbatore).", type: "info", time: "2 days ago", read: true },
-];
+const INITIAL_NOTIFICATIONS = [];
 
-const ACTIVITY_DATA = [
-  { day: "Mon", donors: 12, requests: 4 }, { day: "Tue", donors: 8,  requests: 7 },
-  { day: "Wed", donors: 15, requests: 5 }, { day: "Thu", donors: 6,  requests: 3 },
-  { day: "Fri", donors: 19, requests: 9 }, { day: "Sat", donors: 22, requests: 6 },
-  { day: "Sun", donors: 11, requests: 3 },
-];
+const ACTIVITY_DATA = [];
 
 // ─── HELPERS ────────────────────────────────────────────────────────────────
 
@@ -292,11 +256,173 @@ const ProgressBar = ({ value, max, color }) => {
 
 // LOGIN
 const LoginPage = ({ onLogin }) => {
-  const [loginMode, setLoginMode] = useState("admin"); // "admin", "donor"
-  const [email, setEmail] = useState("admin@bloodbee.in");
-  const [pwd, setPwd] = useState("admin123");
-  const [view, setView] = useState("login"); // "login", "register", "forgot"
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", phone: "", city: "", role: "recipient", bg: "" });
+  const [loginMode, setLoginMode] = useState("donor"); // default to donor for better UX
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [view, setView] = useState("login");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [showVerify, setShowVerify] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", phone: "", city: "", role: "donor", bg: "" });
+
+  const handleSignIn = async () => {
+    if (!email || !pwd) return setError("Please enter email and password");
+    setLoading(true);
+    setError("");
+    try {
+      const resp = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pwd })
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        if (resp.status === 403 && data.redirect === 'verify-email') {
+           setForm({ ...form, email });
+           setError("Please verify your email before logging in.");
+           setShowVerify(true);
+           return;
+        }
+        if (resp.status === 401 || resp.status === 404) {
+          setError("❌ You are not registered. Please create an account first.");
+        } else {
+          setError(data.message || "Login failed");
+        }
+        return;
+      }
+      // Store token in user object
+      const userWithToken = { ...data.user, token: data.token };
+      onLogin(userWithToken);
+    } catch (err) {
+      setError("Server connection failed. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleManualVerify = async () => {
+    const userEmail = prompt("Please enter your registered email address:");
+    if (!userEmail) return;
+    
+    setLoading(true);
+    setError("");
+    try {
+      const resp = await fetch('http://localhost:5000/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail })
+      });
+      const data = await resp.json();
+      if (data.alreadyVerified) {
+        alert("✅ You are already verified! You can log in now.");
+        return;
+      }
+      if (!resp.ok) {
+        return setError(data.message || "User not found.");
+      }
+      setForm({ ...form, email: userEmail });
+      setShowVerify(true);
+      setError("");
+    } catch (err) {
+      setError("Server connection failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async () => {
+    if(!form.name || !form.email || !form.city || !form.password || (loginMode === "donor" && !form.bg)) {
+      return setError("Please fill all required fields");
+    }
+    if(form.password !== form.confirmPassword) return setError("Passwords do not match!");
+    
+    setLoading(true);
+    setError("");
+    try {
+      const resp = await fetch('http://localhost:5000/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          role: loginMode.toUpperCase(),
+          bloodGroup: form.bg,
+          phone: form.phone,
+          city: form.city
+        })
+      });
+      const data = await resp.json();
+      if (!resp.ok) return setError(data.message || "Signup failed");
+      
+      setShowVerify(true);
+      setError("");
+    } catch (err) {
+      setError("Server connection failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOtpChange = (index, value) => {
+    if (value.length > 1) return;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+    // Auto-focus next
+    if (value && index < 5) {
+      document.getElementById(`otp-${index + 1}`).focus();
+    }
+  };
+
+  const verifyAccount = async () => {
+    const fullOtp = otp.join("");
+    if (fullOtp.length < 6) return setError("Please enter 6-digit OTP");
+    
+    setLoading(true);
+    setError("");
+    try {
+      const resp = await fetch('http://localhost:5000/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, otp: fullOtp })
+      });
+      if (!resp.ok) {
+        const data = await resp.json();
+        return setError(data.message || "Verification failed");
+      }
+      alert("✅ Email verified! You can now log in.");
+      setShowVerify(false);
+      setView("login");
+      setEmail(form.email);
+    } catch (err) {
+      setError("Verification failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!form.email) return;
+    setLoading(true);
+    setError("");
+    try {
+      const resp = await fetch('http://localhost:5000/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email })
+      });
+      const data = await resp.json();
+      if (!resp.ok) return setError(data.message || "Failed to resend code");
+      alert("✅ New verification code sent!");
+      setOtp(["", "", "", "", "", ""]); // Reset boxes
+    } catch (err) {
+      setError("Server connection failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const [fStep, setFStep] = useState(1);
   const [fEmail, setFEmail] = useState("");
@@ -336,12 +462,13 @@ const LoginPage = ({ onLogin }) => {
             </div>
 
             <div style={{ fontWeight: 700, fontSize: 18, color: C.text, marginBottom: 20 }}>Sign In as {loginMode === "admin" ? "Admin" : "User"}</div>
+            {error && <div style={{ marginBottom: 16 }}><Alert type="danger">{error}</Alert></div>}
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <Input label="Email Address" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Ex: you@email.com" />
               <Input label="Password" type="password" value={pwd} onChange={e => setPwd(e.target.value)} placeholder="••••••••" />
             </div>
-            <Btn variant="primary" onClick={() => onLogin({ id: loginMode === "admin" ? 1 : 3, name: loginMode === "admin" ? "Admin User" : "Priya Devi", email, role: loginMode, bg: loginMode === "donor" ? "A+" : undefined })} style={{ width: "100%", marginTop: 20, padding: "12px", fontSize: 14 }}>
-              Sign In →
+            <Btn variant="primary" disabled={loading} onClick={handleSignIn} style={{ width: "100%", marginTop: 20, padding: "12px", fontSize: 14 }}>
+              {loading ? "Signing In..." : "Sign In →"}
             </Btn>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
               <div style={{ fontSize: 13, color: C.textMuted }}>
@@ -351,12 +478,19 @@ const LoginPage = ({ onLogin }) => {
                 Forgot Password?
               </div>
             </div>
+            <div style={{ textAlign: "center", marginTop: 24, padding: "12px", border: `1px dashed ${C.border}`, borderRadius: 8 }}>
+              <div style={{ fontSize: 13, color: C.textMuted, marginBottom: 8 }}>Need to verify your account?</div>
+              <span onClick={handleManualVerify} style={{ color: C.crimson, cursor: "pointer", fontWeight: 700, fontSize: 14 }}>
+                Verify Email Now →
+              </span>
+            </div>
           </>
         )}
 
         {view === "register" && (
           <>
             <div style={{ fontWeight: 700, fontSize: 20, color: C.text, marginBottom: 20 }}>Create {loginMode === "admin" ? "Admin" : "User"} Account</div>
+            {error && <div style={{ marginBottom: 16 }}><Alert type="danger">{error}</Alert></div>}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               <Input label="Full Name" required placeholder="Ex: Dr. Ramesh Kumar" onChange={e => setForm({...form, name: e.target.value})} />
               <Input label="Email" required type="email" placeholder="Ex: you@example.com" onChange={e => setForm({...form, email: e.target.value})} />
@@ -371,12 +505,8 @@ const LoginPage = ({ onLogin }) => {
                 </Select>
               )}
             </div>
-            <Btn variant="primary" onClick={() => {
-              if(!form.name || !form.email || !form.city || !form.password || (loginMode === "donor" && !form.bg)) return alert("Fill required fields");
-              if(form.password !== form.confirmPassword) return alert("Passwords do not match!");
-              onLogin({ id: Date.now(), name: form.name, email: form.email, role: loginMode, city: form.city, bg: form.bg, phone: form.phone, isNew: true });
-            }} style={{ width: "100%", marginTop: 20, padding: "12px", fontSize: 14 }}>
-              Create Account →
+            <Btn variant="primary" disabled={loading} onClick={handleRegister} style={{ width: "100%", marginTop: 20, padding: "12px", fontSize: 14 }}>
+              {loading ? "Creating Account..." : "Create Account →"}
             </Btn>
             <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: C.textMuted }}>
               Already have an account?{" "}
@@ -428,6 +558,58 @@ const LoginPage = ({ onLogin }) => {
             </div>
           </>
         )}
+
+        <Modal open={showVerify} onClose={() => setShowVerify(false)} title="Verify Your Identity" width={420}>
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 24, marginBottom: 10 }}>📧</div>
+            <div style={{ fontWeight: 700, fontSize: 18, color: C.text, marginBottom: 8 }}>Email Verification</div>
+            <p style={{ fontSize: 13, color: C.textMuted, marginBottom: 24 }}>
+              We've sent a 6-digit code to <br/>
+              <strong style={{ color: C.text }}>{form.email}</strong>
+            </p>
+
+            {error && <div style={{ marginBottom: 16 }}><Alert type="danger">{error}</Alert></div>}
+
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 24 }}>
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  id={`otp-${i}`}
+                  type="text"
+                  maxLength="1"
+                  value={digit}
+                  onChange={(e) => handleOtpChange(i, e.target.value.replace(/\D/g, ""))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Backspace" && !digit && i > 0) {
+                      document.getElementById(`otp-${i - 1}`).focus();
+                    }
+                  }}
+                  style={{
+                    width: 44,
+                    height: 52,
+                    textAlign: "center",
+                    fontSize: 20,
+                    fontWeight: 800,
+                    borderRadius: 10,
+                    border: `2px solid ${digit ? C.crimson : C.border}`,
+                    outline: "none",
+                    background: digit ? C.crimsonLight : "#fff",
+                    color: C.text,
+                    transition: "all 0.2s"
+                  }}
+                />
+              ))}
+            </div>
+
+            <Btn variant="primary" onClick={verifyAccount} disabled={loading} style={{ width: "100%", padding: "12px", fontSize: 14 }}>
+              {loading ? "Verifying..." : "Verify & Continue →"}
+            </Btn>
+            
+            <div style={{ marginTop: 20, fontSize: 13, color: C.textMuted }}>
+              Didn't receive code? <span onClick={handleResendOtp} style={{ color: C.blue, cursor: "pointer", fontWeight: 600 }}>Resend OTP</span>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );
@@ -546,17 +728,67 @@ const Dashboard = ({ inventory, donors, requests, onNavigate }) => {
 };
 
 // INVENTORY PAGE
-const InventoryPage = ({ inventory, setInventory }) => {
+const InventoryPage = ({ inventory, setInventory, currentUser }) => {
   const [form, setForm] = useState({ group: "", units: "", reason: "" });
   const [toast, setToast] = useState("");
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleUpdate = () => {
-    if (!form.group || !form.units) { setToast("Please fill all required fields."); setTimeout(() => setToast(""), 3000); return; }
-    const units = parseInt(form.units);
-    setInventory(prev => prev.map(i => i.group === form.group ? { ...i, units: Math.max(0, i.units + units) } : i));
-    setToast(`✓ ${form.group} updated by ${units > 0 ? "+" : ""}${units} units`);
-    setForm({ group: "", units: "", reason: "" });
-    setTimeout(() => setToast(""), 3000);
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const fetchLogs = async () => {
+    try {
+      const resp = await fetch('http://localhost:5000/api/admin/inventory-logs', {
+        headers: { 'Authorization': `Bearer ${currentUser.token}` }
+      });
+      const data = await resp.json();
+      if (data.success) setLogs(data.data);
+    } catch (err) {
+      console.error("Failed to fetch logs", err);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!form.group || !form.units) { 
+      setToast("Please fill all required fields."); 
+      setTimeout(() => setToast(""), 3000); 
+      return; 
+    }
+
+    const change = parseInt(form.units);
+    const currentStock = inventory.find(i => i.group === form.group)?.units || 0;
+    const newTotal = Math.max(0, currentStock + change);
+
+    setLoading(true);
+    try {
+      const resp = await fetch('http://localhost:5000/api/admin/update-inventory', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        },
+        body: JSON.stringify({ 
+          blood_group: form.group, 
+          units: newTotal,
+          type: change > 0 ? "Deposit" : "Withdrawal",
+          note: form.reason 
+        })
+      });
+
+      if (!resp.ok) throw new Error("Update failed");
+
+      setInventory(prev => prev.map(i => i.group === form.group ? { ...i, units: newTotal } : i));
+      setToast(`✓ ${form.group} updated to ${newTotal} units`);
+      setForm({ group: "", units: "", reason: "" });
+      fetchLogs(); // Refresh logs
+      setTimeout(() => setToast(""), 3000);
+    } catch (err) {
+      setToast("❌ Update failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -603,22 +835,18 @@ const InventoryPage = ({ inventory, setInventory }) => {
 
       <Card>
         <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 16 }}>Inventory Log</div>
-        <Table headers={["Date", "Blood Group", "Change", "Units After", "By", "Reason"]}>
-          {[
-            { date: "2025-01-15 10:30", group: "O-",  change: -5,  after: 1,  by: "Dr. Arjun", reason: "Emergency surgery" },
-            { date: "2025-01-15 09:00", group: "A+",  change: +20, after: 80, by: "Admin",     reason: "January donation drive" },
-            { date: "2025-01-14 16:45", group: "B+",  change: -8,  after: 72, by: "Dr. Priya", reason: "REQ-001831 approved" },
-            { date: "2025-01-14 11:20", group: "AB-", change: -2,  after: 4,  by: "Admin",     reason: "Critical patient" },
-          ].map((row, i) => (
-            <Tr key={i}>
-              <Td><span style={{ fontSize: 11, color: C.textMuted, fontFamily: "monospace" }}>{row.date}</span></Td>
-              <Td><BloodGroupPill group={row.group} /></Td>
-              <Td><span style={{ fontWeight: 700, color: row.change > 0 ? C.green : C.crimson }}>{row.change > 0 ? "+" : ""}{row.change}</span></Td>
-              <Td><strong>{row.after}</strong></Td>
-              <Td>{row.by}</Td>
-              <Td style={{ color: C.textMuted, fontSize: 12 }}>{row.reason}</Td>
+        <Table headers={["Date", "Blood Group", "Type", "Stock After", "Reason"]}>
+          {logs.length > 0 ? logs.map((row) => (
+            <Tr key={row.id}>
+              <Td><span style={{ fontSize: 11, color: C.textMuted, fontFamily: "monospace" }}>{new Date(row.timestamp).toLocaleString()}</span></Td>
+              <Td><BloodGroupPill group={row.blood_group} /></Td>
+              <Td><span style={{ fontWeight: 700, color: row.type === 'Deposit' ? C.green : C.crimson }}>{row.type}</span></Td>
+              <Td><strong>{row.units}u</strong></Td>
+              <Td style={{ color: C.textMuted, fontSize: 12 }}>{row.note}</Td>
             </Tr>
-          ))}
+          )) : (
+            <Tr><Td colSpan="5" style={{ textAlign: "center", color: C.textMuted, padding: 20 }}>No transaction logs found.</Td></Tr>
+          )}
         </Table>
       </Card>
     </div>
@@ -737,21 +965,60 @@ const DonorsPage = ({ donors, onNavigate }) => {
 };
 
 // REGISTER DONOR PAGE
-const RegisterDonorPage = ({ onRegister }) => {
+const RegisterDonorPage = ({ onRegister, currentUser }) => {
   const [tab, setTab] = useState(0);
-  const [form, setForm] = useState({ name: "", age: "", gender: "Male", bg: "", available: "Yes", lastDonation: "", conditions: "", phone: "", email: "", city: "" });
+  const [loading, setLoading] = useState(false);
+  const INITIAL_FORM = { name: "", age: "", gender: "Male", bg: "", available: "Yes", lastDonation: "", conditions: "", phone: "", email: "", city: "" };
+  const [form, setForm] = useState(INITIAL_FORM);
   const [success, setSuccess] = useState("");
 
   const f = (k) => (e) => setForm({...form, [k]: e.target.value});
   const tabs = ["Personal Info", "Medical Details", "Contact & Location"];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!form.name || !form.age || !form.bg || !form.phone || !form.city) {
       alert("Please fill all required fields."); return;
     }
-    const donorId = genId("DN");
-    onRegister({ id: donorId, name: form.name, bg: form.bg, age: parseInt(form.age), gender: form.gender, city: form.city, phone: "****" + form.phone.slice(-4), email: form.email || `${form.name.toLowerCase().replace(/\s/g,".")}@email.com`, lastDonation: form.lastDonation || "—", available: form.available === "Yes" });
-    setSuccess(`Donor registered! ID: ${donorId}`);
+    
+    setLoading(true);
+    try {
+      const resp = await fetch('http://localhost:5000/api/admin/donors/register', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        },
+        body: JSON.stringify({
+          name: form.name,
+          age: parseInt(form.age),
+          gender: form.gender,
+          blood_group: form.bg,
+          available: form.available === "Yes",
+          last_donation: form.lastDonation || null,
+          medical_conditions: form.conditions,
+          phone: form.phone,
+          email: form.email,
+          city: form.city
+        })
+      });
+
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.message || "Registration failed");
+
+      const newDonor = data.donor;
+      onRegister(newDonor);
+      setSuccess(`Donor registered! ID: ${newDonor.id}`);
+    } catch (err) {
+      alert("❌ " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setForm(INITIAL_FORM);
+    setSuccess("");
+    setTab(0);
   };
 
   if (success) return (
@@ -759,8 +1026,7 @@ const RegisterDonorPage = ({ onRegister }) => {
       <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}><CheckCircle size={36} color={C.green} /></div>
       <h2 style={{ fontWeight: 800, fontSize: 22, marginBottom: 8, color: C.text }}>Donor Registered!</h2>
       <p style={{ color: C.textMuted, marginBottom: 20 }}>{success}</p>
-      <p style={{ fontFamily: "monospace", fontSize: 12, color: C.textMuted, background: C.surface2, padding: "10px 20px", borderRadius: 8, marginBottom: 24 }}>POST /api/donors/register → 201 Created</p>
-      <Btn variant="primary" onClick={() => setSuccess("")}>Register Another</Btn>
+      <Btn variant="primary" onClick={resetForm}>Register Another</Btn>
     </div>
   );
 
@@ -832,7 +1098,7 @@ const RegisterDonorPage = ({ onRegister }) => {
 };
 
 // REQUESTS PAGE (Admin)
-const RequestsPage = ({ requests, inventory, setRequests, setInventory, addNotification }) => {
+const RequestsPage = ({ requests, inventory, setRequests, setInventory, addNotification, currentUser }) => {
   const [statusFilter, setStatusFilter] = useState("");
   const [urgencyFilter, setUrgencyFilter] = useState("");
   const [bgFilter, setBgFilter] = useState("");
@@ -840,6 +1106,7 @@ const RequestsPage = ({ requests, inventory, setRequests, setInventory, addNotif
   const [approveModal, setApproveModal] = useState(null);
   const [rejectModal, setRejectModal] = useState(null);
   const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const filtered = useMemo(() => requests.filter(r => {
     const q = search.toLowerCase();
@@ -852,19 +1119,62 @@ const RequestsPage = ({ requests, inventory, setRequests, setInventory, addNotif
     return uOrder[a.urgency] - uOrder[b.urgency] || new Date(b.date) - new Date(a.date);
   }), [requests, statusFilter, urgencyFilter, bgFilter, search]);
 
-  const handleApprove = () => {
+  const handleApprove = async () => {
     const r = approveModal;
-    setRequests(prev => prev.map(x => x.id === r.id ? { ...x, status: "Approved", adminNote: note } : x));
-    setInventory(prev => prev.map(i => i.group === r.bg ? { ...i, units: Math.max(0, i.units - r.units) } : i));
-    addNotification({ msg: `Request ${r.id} approved. Collect ${r.units} units of ${r.bg} from ${r.hospital}.`, type: "success" });
-    setApproveModal(null); setNote("");
+    setLoading(true);
+    try {
+      const resp = await fetch('http://localhost:5000/api/admin/update-request-status', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        },
+        body: JSON.stringify({ request_id: r.id, status: 'Approved' })
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.message || "Approval failed");
+
+      setRequests(prev => prev.map(x => x.id === r.id ? { ...x, status: "Approved" } : x));
+      // Refresh inventory because backend deducted it
+      const invRes = await fetch('http://localhost:5000/api/admin/inventory', { 
+        headers: { 'Authorization': `Bearer ${currentUser.token}` } 
+      });
+      if (invRes.ok) {
+        const invData = await invRes.json();
+        setInventory(invData.data.map(i => ({ ...i, group: i.blood_group, units: i.units_available })));
+      }
+
+      addNotification({ msg: `Request ${r.id} approved. Inventory updated.`, type: "success" });
+      setApproveModal(null);
+    } catch (err) {
+      alert("❌ " + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     const r = rejectModal;
-    setRequests(prev => prev.map(x => x.id === r.id ? { ...x, status: "Rejected", adminNote: note } : x));
-    addNotification({ msg: `Request ${r.id} rejected. Reason: ${note || "No reason given."}`, type: "danger" });
-    setRejectModal(null); setNote("");
+    setLoading(true);
+    try {
+      const resp = await fetch('http://localhost:5000/api/admin/update-request-status', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        },
+        body: JSON.stringify({ request_id: r.id, status: 'Rejected' })
+      });
+      if (!resp.ok) throw new Error("Rejection failed");
+
+      setRequests(prev => prev.map(x => x.id === r.id ? { ...x, status: "Rejected" } : x));
+      addNotification({ msg: `Request ${r.id} rejected. Status updated for user.`, type: "danger" });
+      setRejectModal(null);
+    } catch (err) {
+      alert("❌ " + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -921,11 +1231,21 @@ const RequestsPage = ({ requests, inventory, setRequests, setInventory, addNotif
               <Td>
                 {r.status === "Pending" ? (
                   <div style={{ display: "flex", gap: 6 }}>
-                    <Btn variant="success" size="sm" onClick={() => { setApproveModal(r); setNote(""); }}><Check size={12} /></Btn>
-                    <Btn variant="danger" size="sm" onClick={() => { setRejectModal(r); setNote(""); }}><X size={12} /></Btn>
+                    <button
+                      onClick={() => { setApproveModal(r); setNote(""); }}
+                      style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 6, border: "none", background: "#16a34a", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+                    >
+                      <Check size={12} /> Accept
+                    </button>
+                    <button
+                      onClick={() => { setRejectModal(r); setNote(""); }}
+                      style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 6, border: "none", background: "#dc2626", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+                    >
+                      <X size={12} /> Reject
+                    </button>
                   </div>
                 ) : (
-                  <Btn variant="ghost" size="sm"><Eye size={13} /></Btn>
+                  <Badge status={r.status === "Approved" ? "success" : "danger"}>{r.status}</Badge>
                 )}
               </Td>
             </Tr>
@@ -972,13 +1292,15 @@ const RequestsPage = ({ requests, inventory, setRequests, setInventory, addNotif
 };
 
 // ─── NEW REQUEST PAGE (with Nearby Donors Feature) ──────────────────────────
-const NewRequestPage = ({ inventory, addRequest, donors, addNotification }) => {
+const NewRequestPage = ({ inventory, addRequest, donors, addNotification, currentUser }) => {
   const [form, setForm] = useState({ patient: "", age: "", bg: "", units: "", hospital: "", doctor: "", contact: "", urgency: "Normal", reason: "", city: "" });
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const [notifiedIds, setNotifiedIds] = useState(new Set());
   const [emailModal, setEmailModal] = useState(null);
   const [emailSending, setEmailSending] = useState(false);
   const [submittedNotified, setSubmittedNotified] = useState([]);
+  const user = currentUser; // For consistency with handleSubmit code
   const f = k => e => setForm({...form, [k]: e.target.value});
 
   // Find nearby donors: same city + same blood group + available
@@ -1027,38 +1349,59 @@ const NewRequestPage = ({ inventory, addRequest, donors, addNotification }) => {
     });
   };
 
-  const handleSubmit = () => {
-    if (!form.patient || !form.bg || !form.units || !form.hospital || !form.contact || !form.city) { alert("Fill all required fields including city."); return; }
-    const reqId = genId("REQ-");
-    // Collect notified donors info for tracking
-    const notifiedList = donors.filter(d => notifiedIds.has(d.id)).map(d => ({ id: d.id, name: d.name, bg: d.bg }));
-    addRequest({
-      id: reqId,
-      ...form,
-      units: parseInt(form.units),
-      status: "Pending",
-      adminNote: "",
-      date: new Date().toISOString().slice(0,10),
-      userId: 1,
-      notifiedDonors: notifiedList
-    });
-    // Auto-notify remaining nearby donors on submission
-    const unnotified = nearbyDonors.filter(d => !notifiedIds.has(d.id));
-    const allNotified = [...notifiedList, ...unnotified.map(d => ({ id: d.id, name: d.name, bg: d.bg }))];
-    if (unnotified.length > 0) {
-      addNotification({
-        msg: `📧 Auto-alert on submission: ${unnotified.length} additional ${form.bg} donors in ${form.city} notified for ${reqId}.`,
-        type: "info"
-      });
+  const handleSubmit = async () => {
+    if (!form.patient || !form.bg || !form.units || !form.hospital || !form.contact || !form.city) { 
+      alert("Fill all required fields including city."); 
+      return; 
     }
-    if (allNotified.length > 0) {
-      addNotification({
-        msg: `📋 Request ${reqId} submitted with ${allNotified.length} nearby donors notified (${form.bg} in ${form.city}).`,
-        type: "success"
+
+    setLoading(true);
+    try {
+      const resp = await fetch('http://localhost:5000/api/requests', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify({
+          patient_name: form.patient,
+          blood_group: form.bg,
+          units: parseInt(form.units),
+          hospital_name: form.hospital,
+          doctor_name: form.doctor,
+          contact_number: form.contact,
+          urgency: form.urgency,
+          reason: form.reason,
+          city: form.city
+        })
       });
+
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.message || "Request submission failed");
+
+      const newReq = data.request;
+      addRequest(newReq);
+
+      // Collect notified donors info for local display
+      const notifiedList = donors.filter(d => notifiedIds.has(d.id)).map(d => ({ id: d.id, name: d.name, bg: d.bg }));
+      
+      const unnotified = nearbyDonors.filter(d => !notifiedIds.has(d.id));
+      const allNotified = [...notifiedList, ...unnotified.map(d => ({ id: d.id, name: d.name, bg: d.bg }))];
+      
+      if (allNotified.length > 0) {
+        addNotification({
+          msg: `📋 Request ${newReq.id} submitted. ${allNotified.length} nearby donors notified.`,
+          type: "success"
+        });
+      }
+
+      setSubmittedNotified(allNotified);
+      setSuccess(newReq.id);
+    } catch (err) {
+      alert("❌ " + err.message);
+    } finally {
+      setLoading(false);
     }
-    setSubmittedNotified(allNotified);
-    setSuccess(reqId);
   };
 
   if (success) return (
@@ -1111,10 +1454,17 @@ const NewRequestPage = ({ inventory, addRequest, donors, addNotification }) => {
                 <option>Normal</option><option>Urgent</option><option>Critical</option>
               </Select>
               <Input label="Contact Number" required prefix="+91" placeholder="98765 43210" value={form.contact} onChange={e => setForm({...form, contact: e.target.value.replace(/\D/g, '').slice(0, 10)})} />
-              <Select label="City / Location" required value={form.city} onChange={f("city")}>
-                <option value="">Select City</option>
-                {cities.map(c => <option key={c} value={c}>{c}</option>)}
-              </Select>
+              <Input 
+                label="City / Location" 
+                required 
+                value={form.city} 
+                onChange={f("city")} 
+                placeholder="Ex: Coimbatore"
+                list="city-list"
+              />
+              <datalist id="city-list">
+                {cities.map(c => <option key={c} value={c} />)}
+              </datalist>
               <div />
               <div style={{ gridColumn: "1 / -1" }}>
                 <Textarea label="Reason for Request" value={form.reason} onChange={f("reason")} placeholder="Ex: Describe the medical condition..." />
@@ -1347,8 +1697,8 @@ const NewRequestPage = ({ inventory, addRequest, donors, addNotification }) => {
 };
 
 // MY REQUESTS (with Donor Alerts section)
-const MyRequestsPage = ({ requests }) => {
-  const myReqs = requests.filter(r => r.userId <= 2);
+const MyRequestsPage = ({ requests, currentUser }) => {
+  const myReqs = requests.filter(r => r.user_id === currentUser.id);
   return (
     <div>
       <div style={{ marginBottom: 24 }}>
@@ -1377,6 +1727,19 @@ const MyRequestsPage = ({ requests }) => {
                 {r.adminNote && <span style={{ fontSize: 12, color: C.textMuted }}>Note: {r.adminNote}</span>}
               </div>
 
+              {/* ─── STATUS ALERT BANNER ─── */}
+              {r.status === "Approved" && (
+                <div style={{ marginTop: 12, padding: "10px 14px", background: "#f0fdf4", borderRadius: 8, border: "1px solid #86efac", display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+                  <CheckCircle size={16} color="#16a34a" />
+                  <span style={{ color: "#14532d", fontWeight: 600 }}>Approved! Please proceed to <strong>{r.hospital}</strong> to collect <strong>{r.units} units of {r.bg}</strong>.</span>
+                </div>
+              )}
+              {r.status === "Rejected" && (
+                <div style={{ marginTop: 12, padding: "10px 14px", background: "#fef2f2", borderRadius: 8, border: "1px solid #fca5a5", display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+                  <XCircle size={16} color="#dc2626" />
+                  <span style={{ color: "#7f1d1d", fontWeight: 600 }}>Request rejected. Please contact the blood bank or submit a new request for assistance.</span>
+                </div>
+              )}
               {/* ─── DONOR ALERTS SECTION ─── */}
               {r.notifiedDonors && r.notifiedDonors.length > 0 && (
                 <div style={{ marginTop: 14, padding: "12px 14px", background: "#f0fdf4", borderRadius: 10, border: "1px solid #bbf7d0" }}>
@@ -1463,65 +1826,56 @@ const AdminUsersPage = ({ users, setUsers }) => {
 };
 
 // REPORTS PAGE
-const ReportsPage = () => {
-  const [period, setPeriod] = useState("7");
-  const bgStats = [
-    { group: "O+",  requests: 89, units: 178, pct: 65 },
-    { group: "A+",  requests: 62, units: 124, pct: 45 },
-    { group: "B+",  requests: 48, units: 96,  pct: 35 },
-    { group: "AB+", requests: 21, units: 42,  pct: 15 },
-  ];
-  const cityStats = [
-    { city: "Coimbatore", count: 312, pct: 78, color: C.crimson },
-    { city: "Chennai",    count: 221, pct: 55, color: C.blue },
-    { city: "Madurai",    count: 153, pct: 38, color: C.green },
-    { city: "Salem",      count: 96,  pct: 24, color: "#ea580c" },
-    { city: "Trichy",     count: 72,  pct: 18, color: "#7c3aed" },
-  ];
+const ReportsPage = ({ currentUser }) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/admin/reports', {
+      headers: { 'Authorization': `Bearer ${currentUser.token}` }
+    })
+      .then(res => res.json())
+      .then(json => {
+        if (json.success) setData(json.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div style={{ textAlign: "center", padding: 100 }}><RefreshCw size={40} style={{ animation: "spin 2s linear infinite", color: C.crimson }} /></div>;
+
+  const stats = data?.stats || { totalDonors: 0, totalRequests: 0, approvedRequests: 0, unitsDispensed: 0 };
+  const approvalRate = stats.totalRequests > 0 ? Math.round((stats.approvedRequests / stats.totalRequests) * 100) : 0;
+
+  const bgData = data?.requestsByGroup || {};
+  const bgRows = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].map(group => ({
+    group,
+    count: bgData[group] || 0,
+    pct: stats.totalRequests > 0 ? Math.round(((bgData[group] || 0) / stats.totalRequests) * 100) : 0
+  })).sort((a,b) => b.count - a.count);
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontWeight: 800, fontSize: 22, color: C.text, margin: 0 }}>Reports & Analytics</h2>
-          <p style={{ color: C.textMuted, fontSize: 13.5, marginTop: 4 }}>API: GET /api/admin/reports/donations?period={period}days</p>
-        </div>
-        <Select value={period} onChange={e => setPeriod(e.target.value)} style={{ minWidth: 140 }}>
-          <option value="7">Last 7 Days</option>
-          <option value="30">Last 30 Days</option>
-          <option value="90">Last 90 Days</option>
-        </Select>
+      <div style={{ marginBottom: 24 }}>
+        <h2 style={{ fontWeight: 800, fontSize: 22, color: C.text, margin: 0 }}>Reports & Analytics</h2>
+        <p style={{ color: C.textMuted, fontSize: 13.5, marginTop: 4 }}>Real-time database analytics · API: GET /api/admin/reports</p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14, marginBottom: 24 }}>
-        <StatCard label="New Donors" value="84" note={`Last ${period} days`} accent={C.crimson} icon={UserPlus} />
-        <StatCard label="Requests Filed" value="37" note={`Last ${period} days`} accent={C.blue} icon={ClipboardList} />
-        <StatCard label="Approval Rate" value="81%" note="30 approved" accent={C.green} icon={CheckCircle} />
-        <StatCard label="Units Dispensed" value="148" note={`Last ${period} days`} accent="#ea580c" icon={Droplets} />
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
-        <Card>
-          <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 4 }}>Daily Donor Registrations</div>
-          <div style={{ fontSize: 11, color: C.textMuted, marginBottom: 12 }}>New donors per day</div>
-          <BarChart data={ACTIVITY_DATA} valueKey="donors" color={C.crimson} />
-        </Card>
-        <Card>
-          <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 4 }}>Daily Request Volume</div>
-          <div style={{ fontSize: 11, color: C.textMuted, marginBottom: 12 }}>Blood requests filed per day</div>
-          <BarChart data={ACTIVITY_DATA} valueKey="requests" color={C.blue} />
-        </Card>
+        <StatCard label="Total Donors" value={stats.totalDonors} note="Lifetime registry" accent={C.crimson} icon={Users} />
+        <StatCard label="Total Requests" value={stats.totalRequests} note="All time volume" accent={C.blue} icon={ClipboardList} />
+        <StatCard label="Approval Rate" value={`${approvalRate}%`} note={`${stats.approvedRequests} approved`} accent={C.green} icon={CheckCircle} />
+        <StatCard label="Units Dispensed" value={stats.unitsDispensed} note="Net stock outgoing" accent="#ea580c" icon={Droplets} />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         <Card>
           <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 16 }}>Requests by Blood Group</div>
-          <Table headers={["Blood Group", "Requests", "Units", "Share"]}>
-            {bgStats.map(row => (
+          <Table headers={["Blood Group", "Count", "Volume Share"]}>
+            {bgRows.map(row => (
               <Tr key={row.group}>
                 <Td><BloodGroupPill group={row.group} /></Td>
-                <Td><strong>{row.requests}</strong></Td>
-                <Td>{row.units}</Td>
+                <Td><strong>{row.count}</strong></Td>
                 <Td>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ width: 80, height: 6, background: C.surface2, borderRadius: 3, overflow: "hidden" }}>
@@ -1536,17 +1890,16 @@ const ReportsPage = () => {
         </Card>
 
         <Card>
-          <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 16 }}>Donors by City (Top 5)</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {cityStats.map(row => (
-              <div key={row.city} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 88, fontSize: 12, color: C.textMuted, flexShrink: 0 }}>{row.city}</div>
-                <div style={{ flex: 1, height: 10, background: C.surface2, borderRadius: 5, overflow: "hidden" }}>
-                  <div style={{ width: `${row.pct}%`, height: "100%", background: row.color, borderRadius: 5 }} />
-                </div>
-                <div style={{ fontSize: 12, fontWeight: 700, minWidth: 30, textAlign: "right" }}>{row.count}</div>
-              </div>
-            ))}
+          <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 16 }}>Key Insights</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ padding: 14, background: C.surface2, borderRadius: 10 }}>
+              <div style={{ fontSize: 11, color: C.textMuted, textTransform: "uppercase", fontWeight: 700, marginBottom: 4 }}>Most Requested</div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: C.text }}>{bgRows[0]?.group} Blood</div>
+            </div>
+            <div style={{ padding: 14, background: C.surface2, borderRadius: 10 }}>
+              <div style={{ fontSize: 11, color: C.textMuted, textTransform: "uppercase", fontWeight: 700, marginBottom: 4 }}>Inventory Efficiency</div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: C.text }}>{approvalRate}% fulfillment</div>
+            </div>
           </div>
         </Card>
       </div>
@@ -1851,68 +2204,167 @@ export default function App() {
   const [users, setUsers] = useState(INITIAL_USERS);
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
 
+  const isAdmin = user?.role?.toLowerCase() === "admin";
+  const isDonor = user?.role?.toLowerCase() === "donor";
+
+  const mapReq = (r) => ({
+    id: r.id,
+    patient: r.patient_name || r.patient,
+    bg: r.blood_group || r.bg,
+    units: r.units,
+    hospital: r.hospital_name || r.hospital,
+    doctor: r.doctor_name || r.doctor,
+    contact: r.contact_number || r.contact,
+    urgency: r.urgency,
+    status: r.status ? r.status.charAt(0).toUpperCase() + r.status.slice(1) : "Pending",
+    date: r.created_at ? new Date(r.created_at).toISOString().slice(0,10) : (r.date || ""),
+    city: r.city,
+    reason: r.reason,
+    user_id: r.user_id,
+    notifiedDonors: r.notifiedDonors || []
+  });
+
+  const mapDonor = (d) => ({
+    ...d,
+    bg: d.blood_type || d.blood_group || d.bg,
+    lastDonation: d.last_donation || d.lastDonation || "—",
+    available: d.is_available !== undefined ? d.is_available : !!d.available
+  });
+
+  // Fetch data for Admin or Donor
+  useEffect(() => {
+    if (!user) return;
+    
+    const fetchData = async () => {
+      try {
+        const headers = { 'Authorization': `Bearer ${user.token}` };
+        
+        // Admin Data Fetch
+        if (isAdmin) {
+          const [invRes, donorRes, reqRes] = await Promise.all([
+            fetch('http://localhost:5000/api/admin/inventory', { headers }),
+            fetch('http://localhost:5000/api/admin/donors', { headers }),
+            fetch('http://localhost:5000/api/admin/requests', { headers })
+          ]);
+          
+          if (invRes.ok) {
+            const data = await invRes.json();
+            if (data.success) setInventory(data.data.map(i => ({ ...i, group: i.blood_group, units: i.units_available })));
+          }
+          if (donorRes.ok) {
+            const data = await donorRes.json();
+            if (data.success) setDonors(data.data.map(mapDonor));
+          }
+          if (reqRes.ok) {
+            const data = await reqRes.json();
+            if (data.success) setRequests(data.data.map(mapReq));
+          }
+        } 
+        
+        // Donor Data Fetch (specifically his requests)
+        else if (isDonor) {
+          const [reqRes, allDonorsRes] = await Promise.all([
+            fetch('http://localhost:5000/api/requests/my', { headers }),
+            fetch('http://localhost:5000/api/admin/donors', { headers })
+          ]);
+          
+          if (reqRes.ok) {
+            const data = await reqRes.json();
+            if (data.success) setRequests(data.requests.map(mapReq));
+          }
+          if (allDonorsRes.ok) {
+             const data = await allDonorsRes.json();
+             if (data.success) setDonors(data.data.map(mapDonor));
+          }
+
+          // Fetch DB notifications for this user
+          try {
+            const notifRes = await fetch('http://localhost:5000/api/user/notifications', { headers });
+            if (notifRes.ok) {
+              const nData = await notifRes.json();
+              if (nData.success && nData.data.length > 0) {
+                const dbNotifs = nData.data.map(n => ({
+                  id: n.id,
+                  msg: n.message,
+                  type: n.type || 'info',
+                  time: new Date(n.created_at).toLocaleTimeString(),
+                  read: n.read
+                }));
+                setNotifications(prev => {
+                  const existingIds = new Set(prev.map(p => p.id));
+                  const fresh = dbNotifs.filter(n => !existingIds.has(n.id));
+                  return fresh.length > 0 ? [...fresh, ...prev] : prev;
+                });
+              }
+            }
+          } catch (_) {}
+        }
+      } catch (err) {
+        console.error("Fetch failed", err);
+      }
+    };
+    
+    fetchData();
+  }, [user, isAdmin, isDonor]);
+
   const addNotification = (n) => setNotifications(prev => [{ id: Date.now() + Math.random(), time: "just now", read: false, ...n }, ...prev]);
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // 🏁 1. Session Recovery
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      const parsed = JSON.parse(savedUser);
+      setUser(parsed);
+      setPage(parsed.role?.toLowerCase() === "admin" ? "dashboard" : "donor-home");
+    }
+  }, []);
+
   const handleLogin = (u) => {
     setUser(u);
-    if (u.isNew && u.role === "donor") {
-      const donorId = genId("DN");
-      const newDonor = {
-        id: donorId,
-        name: u.name,
-        bg: u.bg,
-        age: 25, // default
-        gender: "Other", // default
-        city: u.city,
-        phone: u.phone ? "****" + u.phone.slice(-4) : "****0000",
-        email: u.email,
-        lastDonation: "—",
-        available: true
-      };
-      setDonors(prev => [newDonor, ...prev]);
-      addNotification({ msg: `New donor ${donorId} (${u.name}, ${u.bg}) registered from portal.`, type: "info" });
-    }
-    setPage(u.role === "admin" ? "dashboard" : "donor-home");
+    localStorage.setItem('user', JSON.stringify(u));
+    const role = u.role.toLowerCase();
+    setPage(role === "admin" ? "dashboard" : "donor-home");
   };
-  const handleLogout = () => { setUser(null); setPage("dashboard"); };
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    setPage("dashboard");
+  };
 
   const handleNavigate = (targetPage) => {
     // Prevent non-admin users from accessing admin-only pages
     const adminOnlyPages = ["dashboard", "inventory", "donors", "register-donor", "requests", "admin-users", "admin-reports"];
-    if (user.role !== "admin" && adminOnlyPages.includes(targetPage)) {
+    if (!isAdmin && adminOnlyPages.includes(targetPage)) {
       setPage("donor-home");
       return;
     }
     setPage(targetPage);
   };
 
-  const addRequest = (r) => setRequests(prev => [r, ...prev]);
+  const addRequest = (r) => setRequests(prev => [mapReq(r), ...prev]);
   const addDonor = (d) => {
-    setDonors(prev => [d, ...prev]);
+    setDonors(prev => [mapDonor(d), ...prev]);
     addNotification({ msg: `New donor ${d.id} (${d.name}, ${d.bg}) registered in ${d.city}.`, type: "info" });
   };
 
   if (!user) return <LoginPage onLogin={handleLogin} />;
 
-  const isAdmin = user.role === "admin";
-  const isDonor = user.role === "donor";
-
   const renderPage = () => {
     switch (page) {
       // ── Admin-only pages ──
       case "dashboard":       return isAdmin ? <Dashboard inventory={inventory} donors={donors} requests={requests} onNavigate={handleNavigate} /> : null;
-      case "inventory":       return isAdmin ? <InventoryPage inventory={inventory} setInventory={setInventory} /> : null;
+      case "inventory":       return isAdmin ? <InventoryPage inventory={inventory} setInventory={setInventory} currentUser={user} /> : null;
       case "donors":          return isAdmin ? <DonorsPage donors={donors} onNavigate={handleNavigate} /> : null;
-      case "register-donor":  return isAdmin ? <RegisterDonorPage onRegister={addDonor} /> : null;
-      case "requests":        return isAdmin ? <RequestsPage requests={requests} inventory={inventory} setRequests={setRequests} setInventory={setInventory} addNotification={addNotification} /> : null;
+      case "register-donor":  return isAdmin ? <RegisterDonorPage onRegister={addDonor} currentUser={user} /> : null;
+      case "requests":        return isAdmin ? <RequestsPage requests={requests} inventory={inventory} setRequests={setRequests} setInventory={setInventory} addNotification={addNotification} currentUser={user} /> : null;
       case "admin-users":     return isAdmin ? <AdminUsersPage users={users} setUsers={setUsers} /> : null;
-      case "admin-reports":   return isAdmin ? <ReportsPage /> : null;
+      case "admin-reports":   return isAdmin ? <ReportsPage currentUser={user} /> : null;
       // ── User pages ──
       case "donor-home":      return <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} />;
       case "incoming-requests": return <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} />;
       case "new-request":     return <NewRequestPage inventory={inventory} addRequest={addRequest} donors={donors} addNotification={addNotification} currentUser={user} />;
-      case "my-requests":     return <MyRequestsPage requests={requests} />;
+      case "my-requests":     return <MyRequestsPage requests={requests} currentUser={user} />;
       // ── Shared pages ──
       case "profile":         return <ProfilePage currentUser={user} />;
       default:                return isAdmin ? <Dashboard inventory={inventory} donors={donors} requests={requests} onNavigate={handleNavigate} /> : <DonorIncomingPage requests={requests} currentUser={user} onNavigate={handleNavigate} />;

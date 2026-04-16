@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BloodBank {
+  id             String           @id
+  name           String
+  email          String           @unique
+  phone          String
+  address        String
+  latitude       Float
+  longitude      Float
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  BloodInventory BloodInventory[]
+  Donation       Donation[]
+}
+
+model BloodInventory {
+  id          String    @id
+  bloodBankId String
+  bloodGroup  String
+  units       Int       @default(0)
+  updatedAt   DateTime
+  BloodBank   BloodBank @relation(fields: [bloodBankId], references: [id])
+
+  @@unique([bloodBankId, bloodGroup])
+}
+
+model BloodRequest {
+  id          String   @id
+  patientName String
+  bloodGroup  String
+  hospital    String
+  units       Int
+  status      String   @default("PENDING")
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  User        User     @relation(fields: [userId], references: [id])
+}
+
+model Camp {
+  id        String   @id
+  name      String
+  location  String
+  date      DateTime
+  organizer String
+  longitude Float?
+  latitude  Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Donation {
+  id          String     @id
+  userId      String
+  bloodBankId String?
+  units       Int
+  status      String     @default("PENDING")
+  date        DateTime   @default(now())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  BloodBank   BloodBank? @relation(fields: [bloodBankId], references: [id])
+  User        User       @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id           String         @id
+  name         String
+  email        String         @unique
+  password     String
+  role         Role           @default(USER)
+  bloodGroup   String?
+  phone        String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  BloodRequest BloodRequest[]
+  Donation     Donation[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+enum Role {
+  USER
+  ADMIN
+  DONOR
+}

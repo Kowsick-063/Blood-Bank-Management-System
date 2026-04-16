@@ -1,0 +1,19 @@
+const { Client } = require('pg');
+require('dotenv').config();
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+});
+
+async function test() {
+  try {
+    console.log('Connecting to:', process.env.DATABASE_URL.split('@')[1]);
+    await client.connect();
+    console.log('✅ Successfully connected to PostgreSQL!');
+    await client.end();
+  } catch (err) {
+    console.error('❌ Connection failed:', err.message);
+  }
+}
+
+test();

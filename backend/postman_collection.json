@@ -1,0 +1,136 @@
+{
+  "info": {
+    "name": "Blood Bank Management APIs",
+    "description": "Collection covering authentication, donor operations, blood requests, auto-matching, and comprehensive admin stock management utilizing PostGIS geography queries.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "YOUR_JWT_TOKEN_HERE",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "1. Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"donor\" \n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "2. Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Donors",
+      "item": [
+        {
+          "name": "3. Register Donor (PostGIS Location)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blood_type\": \"O+\",\n  \"age\": 30,\n  \"weight\": 75.5,\n  \"phone\": \"+1234567890\",\n  \"latitude\": 40.7128,\n  \"longitude\": -74.0060\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/donors/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["donors", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Blood Requests & Auto-Match",
+      "item": [
+        {
+          "name": "4. Create Request (Triggers Auto-Match)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_name\": \"Jane Smith\",\n  \"blood_type\": \"O+\",\n  \"units\": 2,\n  \"urgency\": \"emergency\",\n  \"latitude\": 40.7130,\n  \"longitude\": -74.0065\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/requests",
+              "host": ["{{baseUrl}}"],
+              "path": ["requests"]
+            },
+            "description": "Notice: Sending this payload automatically triggers the Postgres Function to execute 'ST_DistanceSphere()'. If the O+ Donor from Request #3 exists within 50km, they will instantly appear bundled within the resulting 'matches' array in the returned payload!"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "5. Admin Stock Update (Prisma Transactions)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bankId\": \"<UUID_OF_BLOOD_BANK_HERE>\",\n  \"blood_type\": \"O+\",\n  \"units\": 50,\n  \"action\": \"added\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "stock"]
+            },
+            "description": "Requires an Admin token! Pass 'action': 'added' or 'removed'. Automatically logs standard audit traces to 'stock_history'."
+          }
+        }
+      ]
+    }
+  ]
+}

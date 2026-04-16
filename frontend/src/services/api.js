@@ -43,4 +43,12 @@ export const authAPI = {
   logout:        ()     => api.post('/auth/logout'),
 };
 
+// ── Admin endpoints ──
+export const adminAPI = {
+  getStats:      ()     => api.get('/admin/stats'),
+  getRequests:   ()     => api.get('/admin/requests'),
+  getInventory:  ()     => api.get('/admin/inventory'),
+  updateStatus:  (data) => api.post('/admin/update-request-status', data),
+};
+
 export default api;

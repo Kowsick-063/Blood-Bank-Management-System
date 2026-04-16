@@ -1,8 +1,10 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { FiLogOut, FiUsers, FiDroplet, FiShield, FiArrowRight, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
+import { adminAPI } from '../services/api'
 import '../styles/dashboard.css'
 
 const containerVariants = {
@@ -14,12 +16,9 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
 }
 
-// Mock data for demo
-const mockRequests = [
-  { id: 1, name: 'Ravi Kumar', blood: 'O+', hospital: 'Apollo Hospital', units: 2, status: 'urgent' },
-  { id: 2, name: 'Priya S.', blood: 'A-', hospital: 'AIIMS Delhi', units: 1, status: 'normal' },
-  { id: 3, name: 'Ahmed Khan', blood: 'B+', hospital: 'Fortis', units: 3, status: 'fulfilled' },
-]
+
+
+
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth()
@@ -33,11 +32,36 @@ export default function AdminDashboard() {
 
   const initials = user?.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'A'
 
+  const [realStats, setRealStats] = useState({
+    donors: 0,
+    inventory: 0,
+    requests: 0,
+    fulfilled: 0
+  })
+  const [requests, setRequests] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const statsRes = await adminAPI.getStats()
+        if (statsRes.data?.success) setRealStats(statsRes.data.data)
+
+        const reqRes = await adminAPI.getRequests()
+        if (reqRes.data?.success) setRequests(reqRes.data.data.slice(0, 5)) // Show last 5
+      } catch (err) {
+        console.error('Failed to fetch admin data:', err)
+      }
+    }
+    fetchData()
+    const interval = setInterval(fetchData, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
   const stats = [
-    { icon: '👥', label: 'Total Donors', value: '0', iconClass: 'blue' },
-    { icon: '🩸', label: 'Blood Units', value: '0', iconClass: 'red' },
-    { icon: '📋', label: 'Requests', value: '0', iconClass: 'purple' },
-    { icon: '✅', label: 'Fulfilled', value: '0', iconClass: 'green' },
+    { icon: '👥', label: 'Total Donors', value: realStats.donors, iconClass: 'blue' },
+    { icon: '🩸', label: 'Blood Units', value: realStats.inventory, iconClass: 'red' },
+    { icon: '📋', label: 'Requests', value: realStats.requests, iconClass: 'purple' },
+    { icon: '✅', label: 'Fulfilled', value: realStats.fulfilled, iconClass: 'green' },
   ]
 
   const actions = [
@@ -143,12 +167,12 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {mockRequests.map((r) => (
-                  <motion.tr key={r.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: r.id * 0.1 }}>
-                    <td style={{ fontWeight: 600 }}>{r.name}</td>
+                {requests.length > 0 ? requests.map((r, idx) => (
+                  <motion.tr key={r.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }}>
+                    <td style={{ fontWeight: 600 }}>{r.patientName}</td>
                     <td>
                       <span style={{ background: '#fff0f0', color: 'var(--primary)', padding: '2px 10px', borderRadius: 99, fontWeight: 700, fontSize: 12 }}>
-                        {r.blood}
+                        {r.bloodGroup}
                       </span>
                     </td>
                     <td>{r.hospital}</td>
@@ -156,14 +180,20 @@ export default function AdminDashboard() {
                     <td>
                       <span style={{
                         padding: '3px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600,
-                        background: r.status === 'urgent' ? '#fff5f5' : r.status === 'fulfilled' ? '#f0fdf4' : '#fffbeb',
-                        color: r.status === 'urgent' ? 'var(--error)' : r.status === 'fulfilled' ? 'var(--success)' : '#b45309',
+                        background: r.status === 'URGENT' ? '#fff5f5' : r.status === 'FULFILLED' ? '#f0fdf4' : '#fffbeb',
+                        color: r.status === 'URGENT' ? 'var(--error)' : r.status === 'FULFILLED' ? 'var(--success)' : '#b45309',
                       }}>
-                        {r.status === 'urgent' ? '🔴 Urgent' : r.status === 'fulfilled' ? '✅ Fulfilled' : '🟡 Normal'}
+                        {r.status === 'URGENT' ? '🔴 Urgent' : r.status === 'FULFILLED' ? '✅ Fulfilled' : '🟡 ' + r.status}
                       </span>
                     </td>
                   </motion.tr>
-                ))}
+                )) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', color: 'var(--gray-500)', padding: '20px' }}>
+                      No recent requests found in database.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </motion.div>

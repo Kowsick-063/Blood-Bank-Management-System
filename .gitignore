@@ -1,0 +1,29 @@
+# ─── Node modules (never commit these) ───────────────────────────────────────
+node_modules/
+**/node_modules/
+
+# ─── Environment files ────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Build output ─────────────────────────────────────────────────────────────
+dist/
+build/
+.next/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+logs/
+
+# ─── OS files ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Prisma generated ─────────────────────────────────────────────────────────
+src/prisma/generated/
+prisma/generated/
+
+# ─── Scratch/temp files ───────────────────────────────────────────────────────
+backend/scratch/
